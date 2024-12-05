@@ -35,6 +35,7 @@ class CustomUser(AbstractUser):
     name = models.CharField(max_length=60, null=True, blank=True)  # Combined name field
     avatar = models.ImageField(
         default="default.png",
+        upload_to=get_upload_path_user,
     )
     type = models.IntegerField(choices=[(1, 1), (2, 2)], default=1)
     open_id = models.CharField(

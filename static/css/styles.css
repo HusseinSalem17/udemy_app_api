@@ -1,0 +1,97 @@
+/* styles.css */
+
+/* Common styles for all pages */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+.container {
+    text-align: center;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
+    width: 400px;
+    margin: 20px;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Specific styles for success page */
+.success-body {
+    background-color: #f0f8ff;
+}
+
+.success-body h1 {
+    color: #28a745;
+}
+
+/* Specific styles for cancel page */
+.cancel-body {
+    background-color: #ffe6e6;
+}
+
+.cancel-body h1 {
+    color: #dc3545;
+}
+
+/* Specific styles for index page */
+.index-body {
+    background-color: #e6f7ff;
+}
+
+.index-body h1 {
+    color: #007bff;
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2em;
+    }
+
+    p {
+        font-size: 1em;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+
+    .container {
+        padding: 20px;
+        margin: 10px;
+    }
+}

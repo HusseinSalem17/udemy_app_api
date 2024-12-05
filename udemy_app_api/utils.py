@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from urllib.parse import quote
 import os
+from rest_framework.views import exception_handler
 
 
 def get_file_path(folder, type, filename):
@@ -63,3 +64,15 @@ def handle_validation_error(e):
     flattened_errors = flatten_errors(errors)
     print("here flattened_errors", flattened_errors)
     return Response({"error": flattened_errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+def custom_exception_handler(exc, context):
+    # Call REST framework's default exception handler first,
+    # to get the standard error response.
+    response = exception_handler(exc, context)
+
+    # Now add the HTTP status code to the response.
+    if response is not None:
+        response.data["status_code"] = response.status_code
+
+    return response

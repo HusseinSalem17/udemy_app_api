@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Cancelled</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="cancel-body">
+    <div class="container">
+        <h1>Payment Cancelled</h1>
+        <p>Your payment was cancelled. Please try again.</p>
+        <a href="{% url 'index' %}" class="btn">Go to Home</a>
+    </div>
+</body>
+</html>

@@ -7,7 +7,9 @@ def get_upload_path_user(instance, filename):
 
     folder = "users/"
 
-    folder += f"{safe_username}"  # Use sanitized username
+    folder += f"{safe_username}"  # Use sanitized username example: users/johndoe
     type = "profile_pics"
     # Call get_file_path with the sanitized folder, type, and filename
     return get_file_path(folder, type, filename)
+
+
