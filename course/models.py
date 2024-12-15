@@ -3,9 +3,12 @@ from tempfile import NamedTemporaryFile
 from django.db import models
 from moviepy.editor import VideoFileClip
 from authentication.models import CustomUser
-from course.utils import get_upload_path_course_thumbnail, get_upload_path_course_video
-from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
+from course.utils import (
+    get_upload_path_course_thumbnail,
+    get_upload_path_course_thumbnails,
+    get_upload_path_course_videos,
+)
+
 
 class CourseType(models.Model):
     name = models.CharField(max_length=100)
@@ -28,7 +31,11 @@ class Course(models.Model):
         blank=True,
         max_length=150,
     )
-    type = models.ManyToManyField(CourseType)
+    type = models.ManyToManyField(
+        CourseType,
+        related_name="courses",
+        blank=True,
+    )
     description = models.TextField(null=True, blank=True)
     type_id = models.SmallIntegerField(null=True, blank=True)
     price = models.FloatField()
@@ -44,10 +51,20 @@ class Course(models.Model):
         return self.name
 
 
-class Video(models.Model):
-    course = models.ForeignKey(Course, related_name="videos", on_delete=models.CASCADE)
+class Lesson(models.Model):
+    course = models.ForeignKey(
+        Course,
+        related_name="lessons",
+        on_delete=models.CASCADE,
+    )
     video = models.FileField(
-        upload_to=get_upload_path_course_video,
+        upload_to=get_upload_path_course_videos,
+        null=True,
+        blank=True,
+        max_length=150,
+    )
+    thumbnail = models.ImageField(
+        upload_to=get_upload_path_course_thumbnails,
         null=True,
         blank=True,
         max_length=150,
@@ -62,7 +79,9 @@ class Video(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        super(Video, self).save(*args, **kwargs)  # Save the instance first to ensure the file is available
+        super(Lesson, self).save(
+            *args, **kwargs
+        )  # Save the instance first to ensure the file is available
         if self.video and self.video.name.endswith((".mp4", ".avi", ".mov", "mkv")):
             try:
                 with NamedTemporaryFile(delete=False) as temp_file:
@@ -71,9 +90,7 @@ class Video(models.Model):
                     video_clip = VideoFileClip(temp_file.name)
                     self.video_length = int(video_clip.duration)
                     video_clip.close()
-                super(Video, self).save(update_fields=["video_length"])
+                super(Lesson, self).save(update_fields=["video_length"])
             except Exception as e:
                 logging.error(f"Failed to read the video file: {e}")
-                self.video_length = 0  
-
-
+                self.video_length = 0

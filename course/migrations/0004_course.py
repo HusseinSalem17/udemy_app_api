@@ -9,28 +9,58 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('course', '0003_remove_coursetype_parent_id_coursetype_updated_at'),
+        ("course", "0003_remove_coursetype_parent_id_coursetype_updated_at"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='course',
+            name="course",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200)),
-                ('thumbnail', models.ImageField(blank=True, max_length=150, null=True, upload_to=course.utils.get_upload_path_course_thumbnail)),
-                ('video', models.FileField(blank=True, max_length=150, null=True, upload_to=course.utils.get_upload_path_course_video)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('type_id', models.SmallIntegerField()),
-                ('price', models.FloatField()),
-                ('lesson_num', models.SmallIntegerField(blank=True, null=True)),
-                ('video_length', models.SmallIntegerField(blank=True, null=True)),
-                ('follow', models.SmallIntegerField(blank=True, default=0, null=True)),
-                ('score', models.FloatField(blank=True, default=0, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200)),
+                (
+                    "thumbnail",
+                    models.ImageField(
+                        blank=True,
+                        max_length=150,
+                        null=True,
+                        upload_to=course.utils.get_upload_path_course_thumbnail,
+                    ),
+                ),
+                (
+                    "video",
+                    models.FileField(
+                        blank=True,
+                        max_length=150,
+                        null=True,
+                        upload_to=course.utils.get_upload_path_course_videos,
+                    ),
+                ),
+                ("description", models.TextField(blank=True, null=True)),
+                ("type_id", models.SmallIntegerField()),
+                ("price", models.FloatField()),
+                ("lesson_num", models.SmallIntegerField(blank=True, null=True)),
+                ("video_length", models.SmallIntegerField(blank=True, null=True)),
+                ("follow", models.SmallIntegerField(blank=True, default=0, null=True)),
+                ("score", models.FloatField(blank=True, default=0, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

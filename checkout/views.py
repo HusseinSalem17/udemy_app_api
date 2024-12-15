@@ -49,7 +49,7 @@ class CreatePaymentView(APIView):
             # check if the order is already paid
             if order and order.status == 1:
                 return Response(
-                    {"error": "Order already paid"},
+                    {"detail": "Order already paid"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             if order:

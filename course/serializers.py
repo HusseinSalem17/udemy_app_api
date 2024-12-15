@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from authentication.serializers import UserSerializer
-from course.models import Course, CourseType, Video
+from course.models import Course, CourseType, Lesson
+from django.conf import settings
 
 
 class CourseTypeSerializer(serializers.ModelSerializer):
@@ -9,14 +10,31 @@ class CourseTypeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class VideoSerializer(serializers.ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Video
+        model = Lesson
         fields = "__all__"
+
+    def validate(self, data):
+        user = self.context["request"].user
+        if self.instance and self.instance.course.teacher != user:
+            raise serializers.ValidationError("You are not the teacher of this course.")
+        return data
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        frontend_url = settings.FRONTEND_URL
+
+        if instance.video:
+            representation["video"] = f"{frontend_url}{instance.video.url}"
+        if instance.thumbnail:
+            representation["thumbnail"] = f"{frontend_url}{instance.thumbnail.url}"
+
+        return representation
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    videos = VideoSerializer(many=True, required=False)
+    lessons = LessonSerializer(many=True, read_only=True)
     type = CourseTypeSerializer(many=True, read_only=True)
     teacher = UserSerializer(read_only=True)
 
@@ -24,21 +42,43 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = "__all__"
 
+    def validate(self, data):
+        user = self.context["request"].user
+        if self.instance and self.instance.teacher != user:
+            raise serializers.ValidationError("You are not the teacher of this course.")
+        return data
+
     def create(self, validated_data):
         user = self.context["request"].user
-        videos_data = self.context["request"].FILES.getlist("videos")
         course = Course.objects.create(teacher=user, **validated_data)
-        print("videos_data", videos_data)
-        for video_data in videos_data:
-            Video.objects.create(course=course, video=video_data)
+
+        lessons_data = self._extract_lessons_data(self.context["request"])
+        for lesson_data in lessons_data:
+            Lesson.objects.create(course=course, **lesson_data)
 
         return course
 
     def update(self, instance, validated_data):
-        videos_data = self.context["request"].FILES.getlist("videos")
         instance = super().update(instance, validated_data)
 
-        for video_data in videos_data:
-            Video.objects.create(course=instance, video=video_data)
+        lessons_data = self._extract_lessons_data(self.context["request"])
+        for lesson_data in lessons_data:
+            Lesson.objects.create(course=instance, **lesson_data)
 
         return instance
+
+    def _extract_lessons_data(self, request):
+        lessons_data = []
+        index = 0
+        while True:
+            lesson_data = {
+                "title": request.data.get(f"lessons[{index}][title]"),
+                "description": request.data.get(f"lessons[{index}][description]"),
+                "thumbnail": request.FILES.get(f"lessons[{index}][thumbnail]"),
+                "video": request.FILES.get(f"lessons[{index}][video]"),
+            }
+            if not any(lesson_data.values()):
+                break
+            lessons_data.append(lesson_data)
+            index += 1
+        return lessons_data

@@ -8,29 +8,52 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('course', '0004_course'),
+        ("course", "0004_course"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='course',
-            name='video',
+            model_name="course",
+            name="video",
         ),
         migrations.AddField(
-            model_name='course',
-            name='type',
-            field=models.ManyToManyField(to='course.coursetype'),
+            model_name="course",
+            name="type",
+            field=models.ManyToManyField(to="course.coursetype"),
         ),
         migrations.CreateModel(
-            name='Video',
+            name="Video",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('video', models.FileField(blank=True, max_length=150, null=True, upload_to=course.utils.get_upload_path_course_video)),
-                ('title', models.CharField(max_length=200)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='videos', to='course.course')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "video",
+                    models.FileField(
+                        blank=True,
+                        max_length=150,
+                        null=True,
+                        upload_to=course.utils.get_upload_path_course_videos,
+                    ),
+                ),
+                ("title", models.CharField(max_length=200)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "course",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="videos",
+                        to="course.course",
+                    ),
+                ),
             ],
         ),
     ]

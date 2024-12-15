@@ -7,9 +7,15 @@ from course.models import Course
 
 # In your Order model, add the stripe_session_id field to store the Stripe session ID
 class Order(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    buyer = models.ForeignKey(
+        CustomUser,
+        on_delete=models.PROTECT,
+    )
     total_amount = models.FloatField()
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.PROTECT,
+    )
     status = models.SmallIntegerField(default=0)
     stripe_session_id = models.CharField(
         max_length=255,
@@ -20,4 +26,4 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.user.name
+        return self.buyer.name
