@@ -84,13 +84,22 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
     def perform_update(self, serializer):
         serializer.save(teacher=self.request.user)
 
+
 class LessonView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     serializer_class = LessonSerializer
 
-    def get(self, request):
-        lessons = Lesson.objects.all()
+    def get(self, request, pk):
+        try:
+            course = Course.objects.get(pk=pk)
+        except Course.DoesNotExist:
+            return Response(
+                {"error": "Course not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        lessons = Lesson.objects.filter(course=course)
         serializer = LessonSerializer(lessons, many=True)
         return Response(serializer.data)
 
@@ -146,6 +155,7 @@ class LessonView(APIView):
     #         {"msg": "Lesson deleted successfully"},
     #         status=status.HTTP_204_NO_CONTENT,
     #     )
+
 
 class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Lesson.objects.all()

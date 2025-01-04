@@ -20,11 +20,11 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "192.168.1.3",
     "10.0.2.2",
-    "e2aa-197-54-92-137.ngrok-free.app",
+    "dinosaur-inviting-lynx.ngrok-free.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://e2aa-197-54-92-137.ngrok-free.app",
+    "https://dinosaur-inviting-lynx.ngrok-free.app",
 ]
 # Application definition
 
@@ -188,4 +188,6 @@ SIMPLE_JWT = {
 # stripe configurations
 STRIPE_SECRET_KEY = "sk_test_51QKiyaKXG19NXzkWeeH0dHWIXVN3s2Kw7GjoiDBZIzMKlOcYg5Al4vovSRe84HFKZq6JfgpYJOBHVUWNGEYgRmUq00mWlr2cLy"
 STRIPE_PUBLISHABLE_KEY = "pk_test_51QKiyaKXG19NXzkWe5amKzMzRYtpEH9UGaH3kL9elhwZDpv3DTIwdEO5hPohdvM2dOeEdasUV3VTVX1rZ4i7fqeE005lm61bV7"
-FRONTEND_URL = "https://e2aa-197-54-92-137.ngrok-free.app/"
+FRONTEND_URL = "https://dinosaur-inviting-lynx.ngrok-free.app"
+FRONTEND_URL_WEB = "http://127.0.0.1:8000"
+FRONTEND_URL_MOBILE = "http://10.0.2.2:8000"

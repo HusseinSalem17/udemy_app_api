@@ -21,7 +21,7 @@ class CourseType(models.Model):
     def __str__(self):
         return self.name
 
-
+#todo: add videos_length
 class Course(models.Model):
     name = models.CharField(max_length=200)
     teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -49,7 +49,7 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
-
+    
 
 class Lesson(models.Model):
     course = models.ForeignKey(

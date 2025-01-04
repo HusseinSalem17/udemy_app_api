@@ -9,7 +9,7 @@ import csv
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "buyer",
+        "user",
         "total_amount",
         "course",
         "course__id",
@@ -17,8 +17,8 @@ class OrderAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
     )
-    search_fields = ("buyer__username", "course__name", "status", "course__id")
-    list_filter = ("created_at", "updated_at", "status", "buyer__name")
+    search_fields = ("user__username", "course__name", "status", "course__id")
+    list_filter = ("created_at", "updated_at", "status", "user__name")
     actions = ["export_as_csv"]
 
     def has_add_permission(self, request):

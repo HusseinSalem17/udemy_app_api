@@ -37,6 +37,7 @@ class CreatePaymentView(APIView):
         try:
             # Fetch the course object
             course = Course.objects.get(pk=pk)
+            print("course hereeee", course)
         except Course.DoesNotExist:
             return Response(
                 {"error": "Course doesn't exist"},
@@ -117,8 +118,8 @@ class CreatePaymentView(APIView):
                         },
                     },
                     mode="payment",
-                    success_url=settings.FRONTEND_URL + "api/checkout/success",
-                    cancel_url=settings.FRONTEND_URL + "api/checkout/cancel",
+                    success_url=settings.FRONTEND_URL + "/api/checkout/success",
+                    cancel_url=settings.FRONTEND_URL + "/api/checkout/cancel",
                 )
 
                 # Save the Stripe session ID in the order

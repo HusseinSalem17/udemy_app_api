@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 from .models import CustomUser
 from django.contrib.auth import authenticate
@@ -39,6 +40,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        frontend_url = settings.FRONTEND_URL_MOBILE
+        data["avatar"] = f"{frontend_url}{instance.avatar.url}"
+        return data
+
 
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -71,7 +78,7 @@ class UserLoginSerializer(serializers.Serializer):
         return user
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
@@ -91,3 +98,38 @@ class UserSerializer(serializers.ModelSerializer):
             "created_at": {"read_only": True},
             "updated_at": {"read_only": True},
         }
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        frontend_url = settings.FRONTEND_URL_MOBILE
+        data["avatar"] = f"{frontend_url}{instance.avatar.url}"
+        return data
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = [
+            "id",
+            "avatar",
+            "type",
+            "open_id",
+            "name",
+            "email",
+            "verified_at",
+            "created_at",
+            "updated_at",
+        ]
+        extra_kwargs = {
+            "id": {"read_only": True},
+            "verified_at": {"read_only": True},
+            "created_at": {"read_only": True},
+            "updated_at": {"read_only": True},
+        }
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        frontend_url = settings.FRONTEND_URL_MOBILE
+        print("avatar", instance.avatar)
+        data["avatar"] = f"{frontend_url}{instance.avatar.url}"
+        return data

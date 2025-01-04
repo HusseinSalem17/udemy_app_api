@@ -3,12 +3,18 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 
 from udemy_app_api.utils import handle_validation_error
-from .serializers import UserLoginSerializer, UserRegisterSerializer, UserSerializer
+from .serializers import (
+    UserLoginSerializer,
+    UserRegisterSerializer,
+    UserDetailSerializer,
+)
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import serializers
-from django_ratelimit.decorators import ratelimit
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.views import APIView
 
 
 @api_view(["POST"])
@@ -46,7 +52,7 @@ def user_login(request):
                 {
                     "access_token": access_token,
                     "refresh_token": refresh_token,
-                    "user": UserSerializer(user).data,
+                    "user": UserDetailSerializer(user).data,
                 },
                 status=status.HTTP_200_OK,
             )

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from authentication.serializers import UserSerializer
+from authentication.serializers import UserListSerializer
 from course.models import Course, CourseType, Lesson
 from django.conf import settings
 
@@ -8,6 +8,17 @@ class CourseTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseType
         fields = "__all__"
+
+
+class LessonListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = [
+            "id",
+            "title",
+            "thumbnail",
+            "description",
+        ]
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -23,7 +34,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        frontend_url = settings.FRONTEND_URL
+        frontend_url = settings.FRONTEND_URL_MOBILE
 
         if instance.video:
             representation["video"] = f"{frontend_url}{instance.video.url}"
@@ -36,7 +47,7 @@ class LessonSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     lessons = LessonSerializer(many=True, read_only=True)
     type = CourseTypeSerializer(many=True, read_only=True)
-    teacher = UserSerializer(read_only=True)
+    teacher = UserListSerializer(read_only=True)
 
     class Meta:
         model = Course
